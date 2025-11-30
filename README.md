@@ -2,14 +2,19 @@
 
 ## Descripción
 
-Este proyecto implementa un sistema inteligente basado en conocimiento que utiliza reglas lógicas y estrategias de búsqueda heurística para encontrar la mejor ruta entre dos puntos en un sistema de transporte masivo.
+Este es un proyecto académico para la materia de Inteligencia Artificial. El objetivo es crear un sistema que encuentre la mejor ruta entre dos estaciones en un sistema de transporte masivo usando reglas lógicas y algoritmos de búsqueda.
 
-## Características
+**Materia**: Inteligencia Artificial  
+**Carrera**: Ingeniería en Ciencia de Datos  
+**Universidad**: Universidad Iberoamericana
 
-- **Base de conocimiento con reglas lógicas**: Implementa reglas para determinar conexiones, transferencias y preferencias de rutas
-- **Algoritmos de búsqueda heurística**: Implementa A* (A estrella) y BFS (Búsqueda en anchura)
-- **Sistema de transporte masivo**: Modela estaciones, líneas y conexiones
-- **Evaluación de rutas**: Considera tiempo, costo y número de transbordos
+## ¿Qué hace este proyecto?
+
+Este proyecto busca rutas en un sistema de transporte masivo (como TransMilenio o Metro) usando:
+
+- **Reglas lógicas**: Si dos estaciones están en la misma línea, están conectadas
+- **Algoritmos de búsqueda**: Usa A* y BFS para encontrar rutas
+- **Evaluación**: Considera el tiempo, costo y número de transbordos
 
 ## Requisitos
 
@@ -82,24 +87,25 @@ if ruta:
 └── .gitignore                 # Archivos ignorados por Git
 ```
 
-## Algoritmos Implementados
+## Algoritmos que usamos
 
 ### A* (A Estrella)
-- Utiliza una función heurística basada en distancia euclidiana
-- Optimiza tiempo total de viaje y número de transbordos
-- Garantiza encontrar la ruta óptima si existe
+- Busca la mejor ruta usando una "pista" (heurística) de qué tan lejos está el destino
+- Encuentra rutas que minimizan tiempo y transbordos
+- Es más eficiente que buscar todas las rutas posibles
 
 ### BFS (Búsqueda en Anchura)
-- Encuentra la ruta con menor número de estaciones
-- Útil para comparación con A*
+- Busca nivel por nivel hasta encontrar el destino
+- Encuentra la ruta con menos estaciones
+- Lo incluimos para comparar con A*
 
-## Reglas Lógicas Implementadas
+## Reglas que implementamos
 
-1. **Conexión misma línea**: Si dos estaciones están en la misma línea, están conectadas directamente
-2. **Transferencia permitida**: Las estaciones de transferencia permiten cambio de línea
-3. **Ruta preferible**: Evalúa rutas según tiempo y costo
-4. **Tiempo hora pico**: Ajusta tiempos según horario
-5. **Sin transbordos**: Prioriza rutas directas sin cambios
+1. **Misma línea = conectadas**: Si dos estaciones están en la misma línea, puedes ir directo
+2. **Estaciones de transferencia**: Permiten cambiar de línea
+3. **Rutas mejores**: Preferimos rutas con menos tiempo y costo
+4. **Hora pico**: Los tiempos aumentan en horas pico (6-9 AM, 5-8 PM)
+5. **Sin transbordos es mejor**: Las rutas directas tienen prioridad
 
 ## Ejemplos de Uso
 
@@ -138,9 +144,9 @@ El archivo `pruebas.py` incluye las siguientes pruebas:
 
 El código fuente está disponible en: https://github.com/MelissaGilV/ACT_2__IA_IBERO
 
-## Licencia
+## Notas
 
-Este proyecto es parte de una actividad académica.
+Este es un proyecto académico para la materia de Inteligencia Artificial de primeros semestres. El código está comentado para facilitar su comprensión.
 
 ## Referencias
 
