@@ -330,46 +330,37 @@ class BuscadorRutas:
             raise ValueError(f"Algoritmo desconocido: {algoritmo}")
 
 
-def inicializar_sistema_transmilenio() -> BaseConocimiento:
+def inicializar_sistema_metro_medellin() -> BaseConocimiento:
     """
-    Inicializa el sistema con datos de ejemplo del transporte masivo
-    Basado en un sistema similar a TransMilenio/Bogotá
+    Inicializa el sistema con datos reales del Metro de Medellín
+    Basado en el conocimiento local del sistema de transporte masivo de Medellín
     """
     bc = BaseConocimiento()
     
-    # Líneas principales
-    lineas_metro = ['L1', 'L2', 'L3']
-    lineas_bus = ['B1', 'B2', 'B3']
-    
-    # Estaciones del sistema
+    # Estaciones del Metro de Medellín - Línea A (Norte-Sur)
+    # Coordenadas aproximadas basadas en ubicación geográfica
     estaciones_datos = [
-        # Línea 1 (Metro)
-        ("Portal Norte", TipoTransporte.METRO, (0, 0), ['L1'], ['transferencia']),
-        ("Calle 100", TipoTransporte.METRO, (0, 2), ['L1'], []),
-        ("Calle 72", TipoTransporte.METRO, (0, 4), ['L1'], ['transferencia']),
-        ("Calle 45", TipoTransporte.METRO, (0, 6), ['L1'], []),
-        ("Centro", TipoTransporte.METRO, (0, 8), ['L1'], ['transferencia']),
+        # Línea A del Metro (Niquía - La Estrella)
+        ("Niquía", TipoTransporte.METRO, (0, 0), ['Línea A'], ['transferencia']),
+        ("Bello", TipoTransporte.METRO, (0, 2), ['Línea A'], []),
+        ("Madera", TipoTransporte.METRO, (0, 4), ['Línea A'], []),
+        ("San Antonio", TipoTransporte.METRO, (0, 6), ['Línea A'], ['transferencia']),
+        ("Alpujarra", TipoTransporte.METRO, (0, 8), ['Línea A'], []),
+        ("Exposiciones", TipoTransporte.METRO, (0, 10), ['Línea A'], []),
+        ("Industriales", TipoTransporte.METRO, (0, 12), ['Línea A'], []),
+        ("Poblado", TipoTransporte.METRO, (0, 14), ['Línea A'], ['transferencia']),
+        ("Aguacatala", TipoTransporte.METRO, (0, 16), ['Línea A'], []),
+        ("Itagüí", TipoTransporte.METRO, (0, 18), ['Línea A'], ['transferencia']),
+        ("Sabaneta", TipoTransporte.METRO, (0, 20), ['Línea A'], []),
+        ("La Estrella", TipoTransporte.METRO, (0, 22), ['Línea A'], []),
         
-        # Línea 2 (Metro)
-        ("Portal Sur", TipoTransporte.METRO, (2, 0), ['L2'], []),
-        ("Kennedy", TipoTransporte.METRO, (2, 2), ['L2'], ['transferencia']),
-        ("Bosa", TipoTransporte.METRO, (2, 4), ['L2'], []),
-        ("Centro", TipoTransporte.METRO, (2, 8), ['L2'], ['transferencia']),
+        # Rutas integradas desde Niquía (Barbosa)
+        ("Barbosa", TipoTransporte.BUS, (-2, 0), ['Ruta Integrada Barbosa'], []),
         
-        # Línea 3 (Metro)
-        ("Portal Suba", TipoTransporte.METRO, (-2, 0), ['L3'], []),
-        ("Suba", TipoTransporte.METRO, (-2, 2), ['L3'], []),
-        ("Calle 72", TipoTransporte.METRO, (-2, 4), ['L3'], ['transferencia']),
-        ("Centro", TipoTransporte.METRO, (-2, 8), ['L3'], ['transferencia']),
-        
-        # Líneas de Bus
-        ("Terminal Norte", TipoTransporte.BUS, (1, 1), ['B1'], []),
-        ("Calle 72", TipoTransporte.BUS, (1, 4), ['B1'], ['transferencia']),
-        ("Terminal Sur", TipoTransporte.BUS, (1, 7), ['B1'], []),
-        
-        ("Aeropuerto", TipoTransporte.BUS, (3, 1), ['B2'], []),
-        ("Kennedy", TipoTransporte.BUS, (3, 2), ['B2'], ['transferencia']),
-        ("Centro", TipoTransporte.BUS, (3, 8), ['B2'], []),
+        # Rutas integradas desde Poblado (zonas de trabajo)
+        ("El Poblado Centro", TipoTransporte.BUS, (2, 14), ['Ruta Integrada Poblado'], []),
+        ("Lleras", TipoTransporte.BUS, (2, 15), ['Ruta Integrada Poblado'], []),
+        ("Oviedo", TipoTransporte.BUS, (2, 16), ['Ruta Integrada Poblado'], []),
     ]
     
     # Agregar estaciones
@@ -377,45 +368,79 @@ def inicializar_sistema_transmilenio() -> BaseConocimiento:
         estacion = Estacion(nombre, tipo, coord, lineas, servicios)
         bc.agregar_estacion(estacion)
     
-    # Crear conexiones directas en cada línea (bidireccionales)
-    conexiones_datos = [
-        # Línea 1 (bidireccional)
-        ("Portal Norte", "Calle 100", 5, 2500, "L1", TipoTransporte.METRO),
-        ("Calle 100", "Portal Norte", 5, 2500, "L1", TipoTransporte.METRO),
-        ("Calle 100", "Calle 72", 4, 2500, "L1", TipoTransporte.METRO),
-        ("Calle 72", "Calle 100", 4, 2500, "L1", TipoTransporte.METRO),
-        ("Calle 72", "Calle 45", 5, 2500, "L1", TipoTransporte.METRO),
-        ("Calle 45", "Calle 72", 5, 2500, "L1", TipoTransporte.METRO),
-        ("Calle 45", "Centro", 6, 2500, "L1", TipoTransporte.METRO),
-        ("Centro", "Calle 45", 6, 2500, "L1", TipoTransporte.METRO),
-        
-        # Línea 2 (bidireccional)
-        ("Portal Sur", "Kennedy", 6, 2500, "L2", TipoTransporte.METRO),
-        ("Kennedy", "Portal Sur", 6, 2500, "L2", TipoTransporte.METRO),
-        ("Kennedy", "Bosa", 5, 2500, "L2", TipoTransporte.METRO),
-        ("Bosa", "Kennedy", 5, 2500, "L2", TipoTransporte.METRO),
-        ("Bosa", "Centro", 8, 2500, "L2", TipoTransporte.METRO),
-        ("Centro", "Bosa", 8, 2500, "L2", TipoTransporte.METRO),
-        
-        # Línea 3 (bidireccional)
-        ("Portal Suba", "Suba", 5, 2500, "L3", TipoTransporte.METRO),
-        ("Suba", "Portal Suba", 5, 2500, "L3", TipoTransporte.METRO),
-        ("Suba", "Calle 72", 6, 2500, "L3", TipoTransporte.METRO),
-        ("Calle 72", "Suba", 6, 2500, "L3", TipoTransporte.METRO),
-        ("Calle 72", "Centro", 7, 2500, "L3", TipoTransporte.METRO),
-        ("Centro", "Calle 72", 7, 2500, "L3", TipoTransporte.METRO),
-        
-        # Líneas de Bus (bidireccional)
-        ("Terminal Norte", "Calle 72", 8, 2000, "B1", TipoTransporte.BUS),
-        ("Calle 72", "Terminal Norte", 8, 2000, "B1", TipoTransporte.BUS),
-        ("Calle 72", "Terminal Sur", 10, 2000, "B1", TipoTransporte.BUS),
-        ("Terminal Sur", "Calle 72", 10, 2000, "B1", TipoTransporte.BUS),
-        
-        ("Aeropuerto", "Kennedy", 12, 2000, "B2", TipoTransporte.BUS),
-        ("Kennedy", "Aeropuerto", 12, 2000, "B2", TipoTransporte.BUS),
-        ("Kennedy", "Centro", 15, 2000, "B2", TipoTransporte.BUS),
-        ("Centro", "Kennedy", 15, 2000, "B2", TipoTransporte.BUS),
+    # Crear conexiones del Metro Línea A (bidireccionales)
+    # IMPORTANTE: Para viajes SOLO en Metro (sin tarifa integrada): tarifa única de $3.430 COP
+    # (no se cobra por tramo, es una tarifa única independientemente de cuántas estaciones recorras)
+    # Estas conexiones por tramo se usan solo para calcular tiempos de viaje
+    estaciones_metro = ["Niquía", "Bello", "Madera", "San Antonio", "Alpujarra", "Exposiciones", 
+                        "Industriales", "Poblado", "Aguacatala", "Itagüí", "Sabaneta", "La Estrella"]
+    
+    # Conexiones por tramo (solo para calcular tiempos, no costos)
+    tramos_metro = [
+        ("Niquía", "Bello", 3),
+        ("Bello", "Madera", 2),
+        ("Madera", "San Antonio", 3),
+        ("San Antonio", "Alpujarra", 2),
+        ("Alpujarra", "Exposiciones", 2),
+        ("Exposiciones", "Industriales", 3),
+        ("Industriales", "Poblado", 3),
+        ("Poblado", "Aguacatala", 2),
+        ("Aguacatala", "Itagüí", 3),
+        ("Itagüí", "Sabaneta", 2),
+        ("Sabaneta", "La Estrella", 3),
     ]
+    
+    # Inicializar lista de conexiones
+    conexiones_datos = []
+    
+    # Crear conexiones directas entre todas las estaciones del Metro con tarifa única $3.430
+    # Esto refleja que si viajas solo en Metro, pagas una tarifa única independientemente de la distancia
+    for i, origen in enumerate(estaciones_metro):
+        for destino in estaciones_metro[i+1:]:
+            # Calcular tiempo total sumando los tramos
+            tiempo_total = 0
+            origen_idx = estaciones_metro.index(origen)
+            destino_idx = estaciones_metro.index(destino)
+            if origen_idx < destino_idx:
+                for j in range(origen_idx, destino_idx):
+                    tiempo_total += tramos_metro[j][2]
+            else:
+                for j in range(destino_idx, origen_idx):
+                    tiempo_total += tramos_metro[j][2]
+            
+            # Conexión directa con tarifa única de $3.430 para viajes solo en Metro
+            conexiones_datos.append((origen, destino, tiempo_total, 3430, "Línea A - Solo Metro", TipoTransporte.METRO))
+            conexiones_datos.append((destino, origen, tiempo_total, 3430, "Línea A - Solo Metro", TipoTransporte.METRO))
+    
+    # Agregar el resto de conexiones
+    conexiones_datos.extend([
+        # RUTA INTEGRADA: Barbosa → Poblado (directo con tarifa integrada)
+        # Tarifa integrada $5.255 incluye: Bus Barbosa → Niquía + Metro Niquía → Poblado
+        # Esta es la forma correcta: pagas una sola tarifa integrada que cubre todo
+        ("Barbosa", "Poblado", 43, 5255, "Ruta Integrada Barbosa", TipoTransporte.BUS),
+        ("Poblado", "Barbosa", 43, 5255, "Ruta Integrada Barbosa", TipoTransporte.BUS),
+        
+        # NOTA IMPORTANTE: No creamos conexiones de costo 0 desde Niquía hacia otras estaciones del Metro
+        # porque eso daría a entender que el Metro es gratis. En realidad:
+        # - Si vienes desde Barbosa con tarifa integrada ($5.255), la conexión directa Barbosa → Poblado
+        #   ya incluye el Metro hasta cualquier estación, por lo que no necesitas conexiones adicionales.
+        # - Si viajas solo en Metro desde Niquía (sin tarifa integrada), debes usar las conexiones
+        #   de "Línea A - Solo Metro" con tarifa única $3.430 que ya están creadas arriba.
+        
+        # Rutas integradas desde Poblado (buses integrados)
+        # Tarifa integrada: ~$3.890 (incluye Metro de vuelta + bus)
+        ("Poblado", "El Poblado Centro", 5, 3890, "Ruta Integrada Poblado", TipoTransporte.BUS),
+        ("El Poblado Centro", "Poblado", 5, 3890, "Ruta Integrada Poblado", TipoTransporte.BUS),
+        ("Poblado", "Lleras", 4, 3890, "Ruta Integrada Poblado", TipoTransporte.BUS),
+        ("Lleras", "Poblado", 4, 3890, "Ruta Integrada Poblado", TipoTransporte.BUS),
+        ("Poblado", "Oviedo", 6, 3890, "Ruta Integrada Poblado", TipoTransporte.BUS),
+        ("Oviedo", "Poblado", 6, 3890, "Ruta Integrada Poblado", TipoTransporte.BUS),
+        
+        # Bus NO integrado desde Poblado (opción más económica)
+        # Solo pagas el costo del bus sin integración (~$3.400)
+        ("Poblado", "El Poblado Centro", 5, 3400, "Bus No Integrado", TipoTransporte.BUS),
+        ("El Poblado Centro", "Poblado", 5, 3400, "Bus No Integrado", TipoTransporte.BUS),
+    ])
     
     # Agregar conexiones
     for origen, destino, tiempo, costo, linea, tipo in conexiones_datos:
@@ -432,19 +457,20 @@ def main():
     """Función principal para demostrar el sistema"""
     print("=" * 60)
     print("Sistema Inteligente de Búsqueda de Rutas")
-    print("Transporte Masivo - Basado en Reglas Lógicas")
+    print("Metro de Medellín y Rutas Integradas")
+    print("Basado en Reglas Lógicas y Conocimiento Local")
     print("=" * 60)
     
-    # Inicializar sistema
-    bc = inicializar_sistema_transmilenio()
+    # Inicializar sistema con datos reales del Metro de Medellín
+    bc = inicializar_sistema_metro_medellin()
     buscador = BuscadorRutas(bc)
     
-    # Ejemplos de búsqueda
+    # Ejemplos de búsqueda basados en rutas reales de Medellín
     ejemplos = [
-        ("Portal Norte", "Centro"),
-        ("Portal Sur", "Portal Suba"),
-        ("Aeropuerto", "Terminal Norte"),
-        ("Terminal Norte", "Bosa"),
+        ("Barbosa", "Poblado"),  # Ruta típica: Barbosa → Niquía → Poblado
+        ("Barbosa", "El Poblado Centro"),  # Ruta completa hasta destino de trabajo
+        ("Niquía", "Itagüí"),  # Viaje dentro del Metro
+        ("Poblado", "La Estrella"),  # Continuación hacia el sur
     ]
     
     print("\n--- Búsqueda usando Algoritmo A* ---\n")

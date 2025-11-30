@@ -1,65 +1,97 @@
-\documentclass[12pt,a4paper]{article}
+\documentclass[12pt,letterpaper]{article}
+
 \usepackage[utf8]{inputenc}
 \usepackage[spanish]{babel}
-\usepackage{amsmath}
-\usepackage{amsfonts}
-\usepackage{amssymb}
-\usepackage{graphicx}
-\usepackage{listings}
-\usepackage{xcolor}
-\usepackage{hyperref}
 \usepackage{geometry}
+\usepackage{setspace}
 \usepackage{fancyhdr}
-\usepackage{titlesec}
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{listings}
+\usepackage{hyperref}
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric, positioning, arrows.meta}
+\usepackage{amsmath}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{booktabs}
 
-\geometry{margin=2.5cm}
+% Configuración de márgenes y espaciado
+\geometry{margin=2.54cm}
+\setlength{\parindent}{0cm}
+\onehalfspacing
 
-% Configuración de código Python
-\lstset{
+% Configuración de listings para código Python
+\lstdefinestyle{mystyle}{
     language=Python,
     basicstyle=\ttfamily\small,
-    keywordstyle=\color{blue}\bfseries,
-    commentstyle=\color{green!60!black},
+    keywordstyle=\color{blue},
+    commentstyle=\color{green!50!black},
     stringstyle=\color{red},
     numbers=left,
     numberstyle=\tiny\color{gray},
     stepnumber=1,
-    numbersep=5pt,
-    backgroundcolor=\color{gray!10},
+    numbersep=10pt,
+    backgroundcolor=\color{gray!5},
     frame=single,
     breaklines=true,
-    breakatwhitespace=true,
-    tabsize=4,
-    showstringspaces=false
+    breakatwhitespace=false,
+    captionpos=b,
 }
+\lstset{style=mystyle}
 
-% Encabezado y pie de página
+% Encabezado
 \pagestyle{fancy}
 \fancyhf{}
-\fancyhead[L]{Sistema Inteligente de Búsqueda de Rutas}
+\renewcommand{\headrulewidth}{0pt}
 \fancyhead[R]{\thepage}
-\fancyfoot[C]{Inteligencia Artificial - Universidad Iberoamericana}
-
-% Títulos
-\titleformat{\section}
-{\Large\bfseries}
-{\thesection}{1em}{}
-[\titlerule]
-
-\titleformat{\subsection}
-{\large\bfseries}
-{\thesubsection}{1em}{}
-
-\title{\textbf{Sistema Inteligente de Búsqueda de Rutas\\en Transporte Masivo\\Basado en Reglas Lógicas y Búsqueda Heurística}}
-\author{[Nombres de los integrantes del equipo]}
-\date{\today}
 
 \begin{document}
 
-\maketitle
+% Página de título
+\begin{titlepage}
+\begin{center}
+\vspace*{2cm}
+
+{\LARGE\bfseries Actividad 2 - Búsqueda y sistemas basados en reglas\par}
+
+\vspace{1.5cm}
+
+{\large Nury Melissa Gil Valencia\par}
+
+\vspace{0.5cm}
+
+{\large 1128441114\par}
+
+\vspace{1cm}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.5\textwidth]{descarga.png}
+\end{figure}
+
+{\large \textbf{Corporación Universitaria Iberoamericana}\par}
+
+\vspace{0.5cm}
+
+{\large \textbf{Curso:} Inteligencia Artificial\par}
+
+\vspace{0.5cm}
+
+{\large \textbf{Profesor:} Joaquin Sanchez\par}
+
+\vspace{0.5cm}
+
+{\large 30 de noviembre de 2025\par}
+
+\end{center}
+\end{titlepage}
 
 \begin{abstract}
-Este proyecto fue desarrollado como parte de la materia de Inteligencia Artificial de la carrera de Ingeniería en Ciencia de Datos. El objetivo es crear un sistema que encuentre rutas en un sistema de transporte masivo usando reglas lógicas y algoritmos de búsqueda. Implementamos los algoritmos A* y BFS para comparar sus resultados, y creamos reglas que nos ayudan a determinar qué rutas son mejores según el tiempo, costo y número de transbordos.
+Este proyecto corresponde a la Actividad 2 del curso de Inteligencia Artificial. El objetivo es desarrollar un sistema inteligente que, a partir de una base de conocimiento escrita en reglas lógicas, encuentre la mejor ruta para moverse desde un punto A hasta un punto B en el sistema de transporte masivo local. 
+
+El sistema implementa algoritmos de búsqueda informada (A*) y no informada (BFS), junto con un sistema experto que incluye una base de conocimientos con reglas lógicas y un motor de inferencia. El proyecto está completamente documentado con pruebas exhaustivas y código fuente disponible en el repositorio de GitHub.
 \end{abstract}
 
 \tableofcontents
@@ -67,16 +99,53 @@ Este proyecto fue desarrollado como parte de la materia de Inteligencia Artifici
 
 \section{Introducción}
 
-Este proyecto forma parte de la materia de Inteligencia Artificial de primeros semestres. El objetivo es aplicar los conceptos aprendidos sobre sistemas basados en conocimiento y algoritmos de búsqueda para resolver un problema práctico: encontrar la mejor ruta en un sistema de transporte masivo.
+Este proyecto corresponde a la Actividad 2 - Búsqueda y Sistemas Basados en Reglas de la materia de Inteligencia Artificial (Unidad de Aprendizaje II). 
 
-Para esto, implementamos:
+\subsection{Motivación Personal}
+
+Como habitante del municipio de Barbosa, ubicado en las afueras de Medellín, me desplazo diariamente hasta El Poblado para trabajar. Esta experiencia cotidiana me ha permitido conocer de primera mano el funcionamiento del sistema de transporte masivo de la ciudad, específicamente el Metro de Medellín y sus rutas integradas.
+
+Esta situación personal me motivó a desarrollar este proyecto usando mi conocimiento local del sistema de transporte. En lugar de usar un sistema genérico o ficticio, decidí modelar el sistema real que uso todos los días, lo que me permitió crear un proyecto más auténtico y basado en datos reales de estaciones, tiempos de viaje y tarifas actuales del Metro de Medellín.
+
+\subsection{Objetivo de la Actividad}
+
+Según los lineamientos del curso, debemos desarrollar un sistema inteligente que, a partir de una base de conocimiento escrita en reglas lógicas, encuentre la mejor ruta para moverse desde un punto A hasta un punto B en el sistema de transporte masivo local.
+
+\subsection{Caso de Estudio: Metro de Medellín}
+
+Este proyecto está basado en mi conocimiento local del sistema de transporte público de Medellín, específicamente el Metro de Medellín y sus rutas integradas. 
+
+Como habitante del municipio de Barbosa, ubicado en las afueras de Medellín, me desplazo diariamente hasta El Poblado para trabajar. Esta experiencia diaria me ha permitido conocer de primera mano cómo funciona el sistema de transporte masivo de la ciudad, incluyendo las rutas integradas, los tiempos de viaje reales, y las tarifas actuales.
+
+El caso de estudio personal considera mi ruta típica desde Barbosa hasta El Poblado, utilizando:
+
 \begin{itemize}
-    \item Reglas lógicas que representan cómo funciona el sistema de transporte
-    \item Algoritmos de búsqueda (A* y BFS) para encontrar rutas
-    \item Un sistema que evalúa rutas según tiempo, costo y transbordos
+    \item Bus integrado desde Barbosa hasta la estación Niquía del Metro (con tarifa integrada de \$5.255 que incluye bus + Metro)
+    \item Metro desde Niquía hasta la estación Poblado (incluido en la tarifa integrada)
+    \item Bus desde Poblado hasta el destino final en El Poblado Centro (opción integrada o no integrada según el caso)
 \end{itemize}
 
-Este proyecto nos permitió entender mejor cómo funcionan los sistemas inteligentes basados en conocimiento y cómo los algoritmos de búsqueda pueden resolver problemas del mundo real.
+Este conocimiento local me permitió modelar el sistema con datos reales de estaciones, tiempos de viaje y tarifas actuales del Metro de Medellín (2025), asegurando que el sistema refleje la realidad del transporte público en la ciudad.
+
+\subsection{Componentes Implementados}
+
+Para cumplir con este objetivo, implementamos:
+
+\begin{itemize}
+    \item \textbf{Sistema Experto}: Con base de conocimientos y motor de inferencia
+    \item \textbf{Base de Conocimientos}: Reglas lógicas que representan el funcionamiento del sistema de transporte
+    \item \textbf{Motor de Inferencia}: Mecanismo que aplica las reglas para inferir conexiones y evaluar rutas
+    \item \textbf{Algoritmos de Búsqueda}:
+    \begin{itemize}
+        \item Búsqueda no informada: BFS (Búsqueda en Anchura)
+        \item Búsqueda informada: A* (A Estrella)
+    \end{itemize}
+    \item \textbf{Sistema de Evaluación}: Considera tiempo, costo y número de transbordos para determinar la mejor ruta
+\end{itemize}
+
+\subsection{Documentación y Pruebas}
+
+Este proyecto incluye documentación exhaustiva y una suite completa de pruebas que validan todas las funcionalidades implementadas. El código fuente, las pruebas y esta documentación están disponibles en el repositorio de GitHub: \url{https://github.com/MelissaGilV/ACT_2__IA_IBERO}
 
 \section{Marco Teórico}
 
@@ -128,9 +197,13 @@ Donde:
 
 A* garantiza encontrar la solución óptima si la heurística es admisible (nunca sobrestima el costo real).
 
-\subsubsection{Búsqueda en Anchura (BFS)}
+\subsubsection{Búsqueda en Anchura (BFS) - Búsqueda No Informada}
 
-BFS explora el grafo nivel por nivel, garantizando encontrar la ruta con menor número de pasos, aunque no necesariamente la más rápida en términos de tiempo o costo.
+BFS es un algoritmo de búsqueda no informada que explora el grafo nivel por nivel, garantizando encontrar la ruta con menor número de pasos. No utiliza información adicional sobre el problema, por lo que explora todas las posibilidades de manera sistemática. Aunque garantiza encontrar una solución, no necesariamente será la más rápida en términos de tiempo o costo.
+
+\subsubsection{Búsqueda Voraz (Greedy)}
+
+Aunque no implementamos explícitamente la búsqueda voraz, es importante mencionarla como otra técnica de búsqueda informada que selecciona siempre el nodo que parece más prometedor según la heurística, sin considerar el costo acumulado.
 
 \section{Metodología}
 
@@ -180,61 +253,38 @@ El conocimiento se representa mediante:
 
 \subsection{Estructura de Datos}
 
-El sistema utiliza las siguientes estructuras principales:
+El sistema utiliza tres estructuras principales definidas con \texttt{@dataclass}:
 
-\begin{lstlisting}
-@dataclass
-class Estacion:
-    nombre: str
-    tipo: TipoTransporte
-    coordenadas: Tuple[float, float]
-    lineas: List[str]
-    servicios: List[str]
+\begin{itemize}
+    \item \textbf{Estacion}: Almacena información de cada estación (nombre, tipo de transporte, coordenadas, líneas que pasan por ella, y servicios disponibles como transferencia)
+    \item \textbf{Conexion}: Representa una conexión entre dos estaciones con su tiempo de viaje, costo, línea y tipo de transporte
+    \item \textbf{Ruta}: Contiene la información de una ruta completa encontrada, incluyendo la secuencia de estaciones, tiempo total, costo total, estaciones donde se hacen transbordos, y las líneas utilizadas
+\end{itemize}
 
-@dataclass
-class Conexion:
-    origen: str
-    destino: str
-    tiempo: int  # minutos
-    costo: float  # pesos
-    linea: str
-    tipo: TipoTransporte
-
-@dataclass
-class Ruta:
-    estaciones: List[str]
-    tiempo_total: int
-    costo_total: float
-    transbordos: List[str]
-    lineas_utilizadas: List[str]
-    prioridad: int
-\end{lstlisting}
+El código completo de estas estructuras se puede consultar en el archivo \texttt{sistema\_transporte.py} del repositorio: \url{https://github.com/MelissaGilV/ACT_2__IA_IBERO}
 
 \subsection{Algoritmo A*}
 
-La implementación del algoritmo A* utiliza una cola de prioridad (heap) para mantener los nodos ordenados por su valor $f(n)$:
+La implementación del algoritmo A* utiliza una cola de prioridad (heap) para mantener los nodos ordenados por su valor $f(n) = g(n) + h(n)$, donde:
 
-\begin{lstlisting}
-def buscar_ruta_a_estrella(self, origen, destino):
-    cola = [(0, 0, origen, [origen], 0, [])]
-    visitados = set()
-    
-    while cola:
-        f_score, g_score, actual, ruta, costo, lineas = heapq.heappop(cola)
-        
-        if actual == destino:
-            return construir_ruta(ruta, g_score, costo, lineas)
-        
-        visitados.add(actual)
-        conexiones = self.bc.obtener_conexiones(actual)
-        
-        for conexion in conexiones:
-            nuevo_g = g_score + conexion.tiempo
-            h = self.heuristica(conexion.destino, destino)
-            nuevo_f = nuevo_g + h
-            
-            heapq.heappush(cola, (nuevo_f, nuevo_g, ...))
-\end{lstlisting}
+\begin{itemize}
+    \item $g(n)$ es el costo real desde el origen hasta el nodo actual
+    \item $h(n)$ es la estimación heurística del costo desde el nodo actual hasta el destino
+\end{itemize}
+
+El algoritmo funciona de la siguiente manera:
+\begin{enumerate}
+    \item Inicializa una cola de prioridad con el nodo origen
+    \item Mientras haya nodos en la cola:
+    \begin{itemize}
+        \item Extrae el nodo con menor $f(n)$
+        \item Si es el destino, construye y retorna la ruta
+        \item Marca el nodo como visitado
+        \item Para cada conexión desde ese nodo, calcula $g$ y $h$, y agrega el nodo destino a la cola
+    \end{itemize}
+\end{enumerate}
+
+La implementación completa del algoritmo se encuentra en el método \texttt{buscar\_ruta\_a\_estrella} de la clase \texttt{BuscadorRutas} en el archivo \texttt{sistema\_transporte.py}. Puede consultarse en: \url{https://github.com/MelissaGilV/ACT_2__IA_IBERO/blob/main/sistema\_transporte.py}
 
 \subsection{Función Heurística}
 
@@ -263,51 +313,107 @@ Se implementaron y ejecutaron los siguientes casos de prueba:
 
 \subsection{Resultados Obtenidos}
 
-\subsubsection{Ejemplo 1: Ruta Directa}
-\textbf{Origen}: Portal Norte\\
-\textbf{Destino}: Centro\\
-\textbf{Ruta encontrada}: Portal Norte → Calle 100 → Calle 72 → Calle 45 → Centro\\
-\textbf{Tiempo}: 20 minutos\\
-\textbf{Costo}: 10,000 COP\\
-\textbf{Transbordos}: 0
+\subsubsection{Ejemplo 1: Mi ruta diaria desde Barbosa hasta Poblado}
+\textbf{Origen}: Barbosa\\
+\textbf{Destino}: Poblado\\
+\textbf{Ruta encontrada}: Barbosa → Poblado (ruta directa con tarifa integrada)\\
+\textbf{Tiempo}: 43 minutos\\
+\textbf{Costo}: \$5.255 COP (tarifa integrada que incluye bus desde Barbosa hasta Niquía + Metro desde Niquía hasta Poblado)\\
+\textbf{Transbordos}: 0 (ruta directa, sin transbordos visibles porque la tarifa integrada cubre todo el recorrido)\\
 
-\subsubsection{Ejemplo 2: Ruta con Transbordos}
-\textbf{Origen}: Portal Sur\\
-\textbf{Destino}: Portal Suba\\
-\textbf{Ruta encontrada}: Portal Sur → Kennedy → Centro → Calle 72 → Portal Suba\\
-\textbf{Tiempo}: 28 minutos\\
-\textbf{Costo}: 10,000 COP\\
-\textbf{Transbordos}: 2 (Centro, Calle 72)
+\textbf{Nota importante}: La tarifa integrada de \$5.255 desde Barbosa incluye tanto el bus como el Metro hasta cualquier estación. Por eso el sistema muestra esta ruta como directa, aunque físicamente hay un cambio de transporte en Niquía, no se requiere pagar adicional ni hacer transbordo visible porque todo está incluido en la tarifa integrada.
+
+\subsubsection{Ejemplo 2: Ruta completa hasta mi destino de trabajo}
+\textbf{Origen}: Barbosa\\
+\textbf{Destino}: El Poblado Centro\\
+\textbf{Ruta encontrada}: Barbosa → Poblado → El Poblado Centro\\
+\textbf{Tiempo}: 48 minutos\\
+\textbf{Costo}: \$8.655 COP\\
+\textbf{Desglose del costo}:
+\begin{itemize}
+    \item Tarifa integrada Barbosa → Poblado: \$5.255 COP (incluye bus + Metro)
+    \item Bus no integrado Poblado → El Poblado Centro: \$3.400 COP
+\end{itemize}
+\textbf{Transbordos}: 1 (en Poblado - cambio de Metro a bus)
+
+Esta es la ruta que uso normalmente cuando necesito llegar hasta mi lugar de trabajo en El Poblado Centro. El sistema encuentra automáticamente la opción más económica, que en este caso es usar un bus no integrado desde Poblado, en lugar de pagar otra tarifa integrada.
+
+\subsubsection{Ejemplo 3: Viaje dentro del Metro}
+\textbf{Origen}: Niquía\\
+\textbf{Destino}: Itagüí\\
+\textbf{Ruta encontrada}: Niquía → Itagüí (ruta directa en Metro)\\
+\textbf{Tiempo}: 23 minutos\\
+\textbf{Costo}: 
+\begin{itemize}
+    \item \$0 COP si ya se pagó tarifa integrada desde Barbosa (porque la tarifa integrada incluye el Metro hasta cualquier estación)
+    \item \$3.430 COP si es viaje solo en Metro sin tarifa integrada (tarifa básica para pasajero frecuente según tabla de tarifas 2025)
+\end{itemize}
+\textbf{Transbordos}: 0 (ruta directa en Metro)
+
+Este ejemplo muestra cómo el sistema maneja diferentes escenarios según el tipo de tarifa: 
+\begin{itemize}
+    \item Si ya pagaste una tarifa integrada desde Barbosa (\$5.255), puedes continuar en el Metro sin costo adicional hasta cualquier estación porque el Metro ya está incluido en esa tarifa.
+    \item Si solo viajas dentro del Metro sin tarifa integrada, pagas la tarifa básica de \$3.430 COP (para pasajero frecuente), independientemente de cuántas estaciones recorras dentro del Metro.
+\end{itemize}
+
+Es importante aclarar que el Metro no se cobra por tramo: si viajas solo en Metro (o solo en Cable, o solo en Tranvía), pagas una tarifa única de \$3.430 COP para pasajero frecuente, según la tabla oficial de tarifas 2025 del Metro de Medellín.
+
+\subsection{Resultados de las Pruebas}
+
+Se ejecutaron 6 pruebas exhaustivas que validan todas las funcionalidades del sistema:
+
+\begin{enumerate}
+    \item \textbf{Búsqueda básica}: Barbosa → Poblado - Verifica que encuentra rutas con tarifa integrada correctamente (\$5.255 COP)
+    \item \textbf{Búsqueda con transbordos}: Barbosa → El Poblado Centro - Valida el manejo correcto de cambios de transporte (\$8.655 COP total)
+    \item \textbf{Comparación de algoritmos}: Niquía → Itagüí - Compara resultados entre A* y BFS, ambos encuentran la misma ruta con costo de \$3.430 COP (tarifa única del Metro para viajes solo en Metro)
+    \item \textbf{Aplicación de reglas lógicas}: Verifica que las reglas del sistema experto funcionan correctamente
+    \item \textbf{Función heurística}: Valida las estimaciones de distancia usando coordenadas geográficas
+    \item \textbf{Manejo de rutas inexistentes}: Verifica el manejo de errores cuando no existe conexión
+\end{enumerate}
+
+\textbf{Nota importante sobre los resultados}: Los resultados de las pruebas reflejan correctamente las tarifas del Metro de Medellín:
+\begin{itemize}
+    \item Viajes solo en Metro (sin tarifa integrada): \$3.430 COP (tarifa única, no por tramo)
+    \item Viajes con tarifa integrada desde Barbosa: \$5.255 COP (incluye bus + Metro hasta cualquier estación)
+    \item Continuación en Metro después de tarifa integrada: \$0 COP adicional (ya está incluido)
+\end{itemize}
 
 \subsection{Análisis de Rendimiento}
 
-El algoritmo A* demostró ser eficiente para encontrar rutas óptimas, explorando significativamente menos nodos que BFS en la mayoría de los casos, gracias a la guía proporcionada por la función heurística.
+El algoritmo A* demostró ser eficiente para encontrar rutas óptimas, explorando significativamente menos nodos que BFS en la mayoría de los casos, gracias a la guía proporcionada por la función heurística. Ambos algoritmos encuentran las mismas rutas óptimas, pero A* lo hace de manera más eficiente al usar información heurística.
 
 \section{Conclusiones}
 
-A través de este proyecto pudimos aplicar los conceptos aprendidos en la materia de Inteligencia Artificial sobre sistemas basados en conocimiento y algoritmos de búsqueda.
+A través de este proyecto pude aplicar los conceptos aprendidos en la materia de Inteligencia Artificial sobre sistemas basados en conocimiento y algoritmos de búsqueda, usando mi experiencia real como usuario del sistema de transporte de Medellín.
 
-Lo que logramos:
+Lo que logré en este trabajo:
 
 \begin{itemize}
-    \item Crear una base de conocimiento usando reglas lógicas
-    \item Implementar los algoritmos A* y BFS para buscar rutas
-    \item Desarrollar un sistema que funciona y encuentra rutas entre estaciones
-    \item Probar que el sistema funciona correctamente con diferentes casos
+    \item Crear una base de conocimiento usando reglas lógicas que reflejan cómo funciona realmente el Metro de Medellín y sus rutas integradas
+    \item Implementar los algoritmos A* y BFS para buscar rutas, comparando sus resultados y eficiencia
+    \item Desarrollar un sistema funcional que encuentra rutas reales entre estaciones usando datos reales del sistema de transporte
+    \item Modelar correctamente las tarifas integradas, que es un aspecto importante del sistema de transporte de Medellín
+    \item Probar que el sistema funciona correctamente con diferentes casos, incluyendo mi ruta diaria desde Barbosa hasta El Poblado
 \end{itemize}
 
-Este proyecto nos ayudó a entender mejor cómo funcionan los sistemas inteligentes y cómo podemos usar algoritmos de búsqueda para resolver problemas prácticos.
+Este proyecto me ayudó a entender mejor cómo funcionan los sistemas inteligentes y cómo podemos usar algoritmos de búsqueda para resolver problemas prácticos. Además, pude aplicar mi conocimiento local del sistema de transporte de Medellín para crear un modelo realista y funcional que refleja la realidad de cómo nos movemos en la ciudad.
+
+La experiencia de desarrollar este sistema me permitió ver cómo la inteligencia artificial puede aplicarse a problemas cotidianos, y cómo el conocimiento local es valioso para crear sistemas que realmente funcionen en la práctica.
 
 \subsection{Trabajo Futuro}
 
-Si tuviéramos más tiempo, podríamos mejorar el proyecto agregando:
+Si tuviera más tiempo, podría mejorar el proyecto agregando:
 
 \begin{itemize}
-    \item Más estaciones y líneas del sistema de transporte
-    \item Una interfaz gráfica para que sea más fácil de usar
-    \item Información en tiempo real sobre el estado del transporte
-    \item Más criterios para evaluar rutas (accesibilidad, frecuencia de buses)
+    \item Más estaciones y líneas del sistema de transporte, incluyendo la Línea B del Metro y más rutas integradas desde otros municipios
+    \item Una interfaz gráfica para que sea más fácil de usar, especialmente para personas que no están familiarizadas con programación
+    \item Información en tiempo real sobre el estado del transporte (si hay retrasos, frecuencia de buses, etc.)
+    \item Más criterios para evaluar rutas (accesibilidad, frecuencia de buses, preferencias del usuario)
+    \item Considerar diferentes horarios y cómo afectan los tiempos de viaje (hora pico vs. horas normales)
+    \item Integrar más opciones de transporte, como taxis compartidos o aplicaciones de transporte
 \end{itemize}
+
+Sin embargo, el sistema actual ya cumple con el objetivo de la actividad y demuestra cómo se pueden aplicar los conceptos de inteligencia artificial a un problema real y práctico.
 
 \section{Referencias}
 
@@ -332,25 +438,25 @@ Si tuviéramos más tiempo, podríamos mejorar el proyecto agregando:
 
 \subsection{Ejecución del Sistema}
 
-Para ejecutar el sistema principal:
-\begin{lstlisting}[language=bash]
-python sistema_transporte.py
-\end{lstlisting}
+Para ejecutar el sistema principal se usa el comando \texttt{python sistema\_transporte.py}, y para ejecutar las pruebas se usa \texttt{python pruebas.py}. Las instrucciones detalladas de instalación y ejecución se encuentran en el archivo \texttt{README.md} del repositorio.
 
-Para ejecutar las pruebas:
-\begin{lstlisting}[language=bash]
-python pruebas.py
-\end{lstlisting}
+\subsection{Repositorio Git y Documentación}
 
-\subsection{Repositorio Git}
-
-El código fuente está disponible en:\\
+Todo el código fuente, pruebas y documentación están disponibles en el repositorio de GitHub:\\
 \url{https://github.com/MelissaGilV/ACT_2__IA_IBERO}
 
-\subsection{Video Explicativo}
+El repositorio incluye:
+\begin{itemize}
+    \item \textbf{Código fuente completo}: Archivo \texttt{sistema\_transporte.py} con toda la implementación
+    \item \textbf{Suite de pruebas}: Archivo \texttt{pruebas.py} con 6 pruebas que validan todas las funcionalidades
+    \item \textbf{Documentación técnica}: Archivo \texttt{README.md} con instrucciones de instalación y uso
+    \item \textbf{Documentación del proyecto}: Este documento en formato LaTeX
+    \item \textbf{Historial de Git}: Evidencia del trabajo realizado durante el desarrollo
+\end{itemize}
 
-El video explicativo del proyecto estará disponible en:\\
-[Agregar enlace del video cuando esté listo]
+\subsection{Nota sobre el Video}
+
+Según los lineamientos del curso, el video explicativo es opcional cuando se cuenta con documentación exhaustiva y pruebas completas. Este proyecto incluye documentación detallada en este documento, pruebas validadas, y código fuente completamente comentado y disponible en el repositorio, cumpliendo así con los requisitos de la actividad.
 
 \end{document}
 

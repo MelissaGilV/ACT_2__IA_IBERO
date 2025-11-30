@@ -3,7 +3,7 @@ Archivo de pruebas para el Sistema de Búsqueda de Rutas
 """
 
 from sistema_transporte import (
-    inicializar_sistema_transmilenio,
+    inicializar_sistema_metro_medellin,
     BuscadorRutas,
     BaseConocimiento,
     Estacion,
@@ -18,11 +18,11 @@ def prueba_busqueda_basica():
     print("PRUEBA 1: Búsqueda básica")
     print("="*60)
     
-    bc = inicializar_sistema_transmilenio()
+    bc = inicializar_sistema_metro_medellin()
     buscador = BuscadorRutas(bc)
     
-    origen = "Portal Norte"
-    destino = "Centro"
+    origen = "Barbosa"
+    destino = "Poblado"
     
     print(f"\nBuscando ruta de '{origen}' a '{destino}'...")
     ruta = buscador.buscar_mejor_ruta(origen, destino, 'a_estrella')
@@ -43,11 +43,11 @@ def prueba_busqueda_con_transbordos():
     print("PRUEBA 2: Búsqueda con transbordos")
     print("="*60)
     
-    bc = inicializar_sistema_transmilenio()
+    bc = inicializar_sistema_metro_medellin()
     buscador = BuscadorRutas(bc)
     
-    origen = "Portal Sur"
-    destino = "Portal Suba"
+    origen = "Barbosa"
+    destino = "El Poblado Centro"
     
     print(f"\nBuscando ruta de '{origen}' a '{destino}'...")
     ruta = buscador.buscar_mejor_ruta(origen, destino, 'a_estrella')
@@ -67,11 +67,11 @@ def prueba_comparacion_algoritmos():
     print("PRUEBA 3: Comparación de algoritmos")
     print("="*60)
     
-    bc = inicializar_sistema_transmilenio()
+    bc = inicializar_sistema_metro_medellin()
     buscador = BuscadorRutas(bc)
     
-    origen = "Terminal Norte"
-    destino = "Bosa"
+    origen = "Niquía"
+    destino = "Itagüí"
     
     print(f"\nBuscando ruta de '{origen}' a '{destino}'...")
     
@@ -100,24 +100,24 @@ def prueba_reglas_logicas():
     print("PRUEBA 4: Aplicación de reglas lógicas")
     print("="*60)
     
-    bc = inicializar_sistema_transmilenio()
+    bc = inicializar_sistema_metro_medellin()
     
     # Probar regla de misma línea
     print("\n--- Regla: Conexión misma línea ---")
-    resultado = bc._misma_linea("Portal Norte", "Calle 100")
-    print(f"Portal Norte y Calle 100 en misma línea: {resultado}")
+    resultado = bc._misma_linea("Niquía", "Bello")
+    print(f"Niquía y Bello en misma línea: {resultado}")
     assert resultado == True, "Deberían estar en la misma línea"
     
-    resultado = bc._misma_linea("Portal Norte", "Portal Sur")
-    print(f"Portal Norte y Portal Sur en misma línea: {resultado}")
+    resultado = bc._misma_linea("Barbosa", "Poblado")
+    print(f"Barbosa y Poblado en misma línea: {resultado}")
     assert resultado == False, "No deberían estar en la misma línea"
     
     # Probar regla de transferencia
     print("\n--- Regla: Estación de transferencia ---")
-    estacion = bc.estaciones["Calle 72"]
+    estacion = bc.estaciones["Niquía"]
     es_transferencia = 'transferencia' in estacion.servicios
-    print(f"Calle 72 es estación de transferencia: {es_transferencia}")
-    assert es_transferencia == True, "Calle 72 debería ser transferencia"
+    print(f"Niquía es estación de transferencia: {es_transferencia}")
+    assert es_transferencia == True, "Niquía debería ser transferencia"
     
     print("[OK] Prueba exitosa")
 
@@ -128,16 +128,16 @@ def prueba_heuristica():
     print("PRUEBA 5: Función heurística")
     print("="*60)
     
-    bc = inicializar_sistema_transmilenio()
+    bc = inicializar_sistema_metro_medellin()
     buscador = BuscadorRutas(bc)
     
-    h1 = buscador.heuristica("Portal Norte", "Centro")
-    h2 = buscador.heuristica("Portal Norte", "Calle 100")
-    h3 = buscador.heuristica("Portal Norte", "Portal Norte")
+    h1 = buscador.heuristica("Barbosa", "Poblado")
+    h2 = buscador.heuristica("Niquía", "Bello")
+    h3 = buscador.heuristica("Niquía", "Niquía")
     
-    print(f"\nHeuristica Portal Norte -> Centro: {h1:.2f}")
-    print(f"Heuristica Portal Norte -> Calle 100: {h2:.2f}")
-    print(f"Heuristica Portal Norte -> Portal Norte: {h3:.2f}")
+    print(f"\nHeuristica Barbosa -> Poblado: {h1:.2f}")
+    print(f"Heuristica Niquía -> Bello: {h2:.2f}")
+    print(f"Heuristica Niquía -> Niquía: {h3:.2f}")
     
     assert h3 == 0, "La heuristica a si misma debe ser 0"
     assert h2 < h1, "La distancia a Calle 100 debe ser menor que a Centro"
@@ -151,11 +151,11 @@ def prueba_rutas_inexistentes():
     print("PRUEBA 6: Rutas inexistentes")
     print("="*60)
     
-    bc = inicializar_sistema_transmilenio()
+    bc = inicializar_sistema_metro_medellin()
     buscador = BuscadorRutas(bc)
     
     # Estación que no existe
-    ruta = buscador.buscar_mejor_ruta("EstacionInexistente", "Centro", 'a_estrella')
+    ruta = buscador.buscar_mejor_ruta("EstacionInexistente", "Poblado", 'a_estrella')
     assert ruta is None, "No debería encontrar ruta desde estación inexistente"
     print("[OK] Manejo correcto de estacion inexistente")
     
