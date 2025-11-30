@@ -1,0 +1,354 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{geometry}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+
+\geometry{margin=2.5cm}
+
+% Configuración de código Python
+\lstset{
+    language=Python,
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{blue}\bfseries,
+    commentstyle=\color{green!60!black},
+    stringstyle=\color{red},
+    numbers=left,
+    numberstyle=\tiny\color{gray},
+    stepnumber=1,
+    numbersep=5pt,
+    backgroundcolor=\color{gray!10},
+    frame=single,
+    breaklines=true,
+    breakatwhitespace=true,
+    tabsize=4,
+    showstringspaces=false
+}
+
+% Encabezado y pie de página
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{Sistema Inteligente de Búsqueda de Rutas}
+\fancyhead[R]{\thepage}
+\fancyfoot[C]{Inteligencia Artificial - Universidad Iberoamericana}
+
+% Títulos
+\titleformat{\section}
+{\Large\bfseries}
+{\thesection}{1em}{}
+[\titlerule]
+
+\titleformat{\subsection}
+{\large\bfseries}
+{\thesubsection}{1em}{}
+
+\title{\textbf{Sistema Inteligente de Búsqueda de Rutas\\en Transporte Masivo\\Basado en Reglas Lógicas y Búsqueda Heurística}}
+\author{[Nombres de los integrantes del equipo]}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+Este documento presenta el desarrollo de un sistema inteligente basado en conocimiento que utiliza reglas lógicas y estrategias de búsqueda heurística para encontrar la mejor ruta entre dos puntos en un sistema de transporte masivo. El sistema implementa algoritmos de búsqueda como A* (A estrella) y BFS (Búsqueda en anchura), junto con una base de conocimiento estructurada mediante reglas lógicas que permiten evaluar y optimizar las rutas considerando factores como tiempo de viaje, costo y número de transbordos.
+\end{abstract}
+
+\tableofcontents
+\newpage
+
+\section{Introducción}
+
+Los sistemas de transporte masivo en las grandes ciudades requieren de herramientas inteligentes que ayuden a los usuarios a encontrar la mejor ruta entre un punto de origen y un destino. Este proyecto desarrolla un sistema basado en inteligencia artificial que utiliza representación del conocimiento mediante reglas lógicas y algoritmos de búsqueda heurística para resolver este problema.
+
+El sistema implementado permite:
+\begin{itemize}
+    \item Representar el conocimiento del sistema de transporte mediante reglas lógicas
+    \item Encontrar rutas óptimas usando algoritmos de búsqueda heurística
+    \item Evaluar rutas considerando múltiples criterios (tiempo, costo, transbordos)
+    \item Aplicar reglas de inferencia para determinar conexiones y preferencias
+\end{itemize}
+
+\section{Marco Teórico}
+
+\subsection{Representación del Conocimiento mediante Reglas Lógicas}
+
+La representación del conocimiento mediante reglas lógicas permite modelar el dominio del problema de manera declarativa. Una regla lógica tiene la forma:
+
+\begin{equation}
+\text{Si } P_1 \land P_2 \land \ldots \land P_n \text{ entonces } C
+\end{equation}
+
+Donde $P_1, P_2, \ldots, P_n$ son las premisas y $C$ es la conclusión. En nuestro sistema, las reglas permiten:
+
+\begin{itemize}
+    \item Determinar conexiones entre estaciones
+    \item Identificar estaciones de transferencia
+    \item Evaluar la preferencia de rutas
+    \item Ajustar tiempos según condiciones (hora pico)
+\end{itemize}
+
+\subsection{Sistemas Basados en Reglas}
+
+Un sistema basado en reglas consiste en:
+\begin{enumerate}
+    \item \textbf{Base de hechos}: Información sobre el estado actual del sistema
+    \item \textbf{Base de reglas}: Conjunto de reglas de producción
+    \item \textbf{Motor de inferencia}: Mecanismo que aplica las reglas
+\end{enumerate}
+
+En nuestro caso, la base de hechos contiene información sobre estaciones, conexiones y rutas, mientras que las reglas permiten inferir nuevas conexiones y evaluar rutas.
+
+\subsection{Búsqueda Heurística}
+
+Los algoritmos de búsqueda heurística utilizan información adicional (heurísticas) para guiar la exploración del espacio de estados de manera más eficiente.
+
+\subsubsection{Algoritmo A* (A Estrella)}
+
+El algoritmo A* combina las ventajas de la búsqueda en anchura (BFS) y la búsqueda voraz (greedy). Utiliza una función de evaluación:
+
+\begin{equation}
+f(n) = g(n) + h(n)
+\end{equation}
+
+Donde:
+\begin{itemize}
+    \item $g(n)$: Costo real desde el nodo inicial hasta el nodo $n$
+    \item $h(n)$: Estimación heurística del costo desde el nodo $n$ hasta el objetivo
+\end{itemize}
+
+A* garantiza encontrar la solución óptima si la heurística es admisible (nunca sobrestima el costo real).
+
+\subsubsection{Búsqueda en Anchura (BFS)}
+
+BFS explora el grafo nivel por nivel, garantizando encontrar la ruta con menor número de pasos, aunque no necesariamente la más rápida en términos de tiempo o costo.
+
+\section{Metodología}
+
+\subsection{Diseño del Sistema}
+
+El sistema se estructura en los siguientes componentes principales:
+
+\begin{enumerate}
+    \item \textbf{Base de Conocimiento}: Almacena estaciones, conexiones y reglas lógicas
+    \item \textbf{Motor de Búsqueda}: Implementa algoritmos A* y BFS
+    \item \textbf{Sistema de Evaluación}: Aplica reglas para evaluar y comparar rutas
+\end{enumerate}
+
+\subsection{Representación del Conocimiento}
+
+El conocimiento se representa mediante:
+
+\begin{itemize}
+    \item \textbf{Estaciones}: Nodos del grafo con información de ubicación, tipo y líneas
+    \item \textbf{Conexiones}: Aristas del grafo con información de tiempo, costo y línea
+    \item \textbf{Reglas}: Lógica para inferir conexiones y evaluar rutas
+\end{itemize}
+
+\subsection{Reglas Lógicas Implementadas}
+
+\subsubsection{Regla 1: Conexión en Misma Línea}
+\textbf{Premisa}: Dos estaciones pertenecen a la misma línea de transporte.\\
+\textbf{Conclusión}: Existe una conexión directa entre ellas.
+
+\subsubsection{Regla 2: Transferencia Permitida}
+\textbf{Premisa}: Una estación tiene el servicio de transferencia.\\
+\textbf{Conclusión}: Permite cambio de línea sin costo adicional de tiempo significativo.
+
+\subsubsection{Regla 3: Ruta Preferible}
+\textbf{Premisa}: Una ruta tiene tiempo menor a 60 minutos y costo menor a 10,000 COP.\\
+\textbf{Conclusión}: La ruta es considerada preferible.
+
+\subsubsection{Regla 4: Tiempo Hora Pico}
+\textbf{Premisa}: La hora actual está entre 6-9 AM o 5-8 PM.\\
+\textbf{Conclusión}: El tiempo de viaje se multiplica por 1.3.
+
+\subsubsection{Regla 5: Sin Transbordos}
+\textbf{Premisa}: Una ruta no requiere transbordos.\\
+\textbf{Conclusión}: Se aumenta la prioridad de la ruta en 10 puntos.
+
+\section{Implementación}
+
+\subsection{Estructura de Datos}
+
+El sistema utiliza las siguientes estructuras principales:
+
+\begin{lstlisting}
+@dataclass
+class Estacion:
+    nombre: str
+    tipo: TipoTransporte
+    coordenadas: Tuple[float, float]
+    lineas: List[str]
+    servicios: List[str]
+
+@dataclass
+class Conexion:
+    origen: str
+    destino: str
+    tiempo: int  # minutos
+    costo: float  # pesos
+    linea: str
+    tipo: TipoTransporte
+
+@dataclass
+class Ruta:
+    estaciones: List[str]
+    tiempo_total: int
+    costo_total: float
+    transbordos: List[str]
+    lineas_utilizadas: List[str]
+    prioridad: int
+\end{lstlisting}
+
+\subsection{Algoritmo A*}
+
+La implementación del algoritmo A* utiliza una cola de prioridad (heap) para mantener los nodos ordenados por su valor $f(n)$:
+
+\begin{lstlisting}
+def buscar_ruta_a_estrella(self, origen, destino):
+    cola = [(0, 0, origen, [origen], 0, [])]
+    visitados = set()
+    
+    while cola:
+        f_score, g_score, actual, ruta, costo, lineas = heapq.heappop(cola)
+        
+        if actual == destino:
+            return construir_ruta(ruta, g_score, costo, lineas)
+        
+        visitados.add(actual)
+        conexiones = self.bc.obtener_conexiones(actual)
+        
+        for conexion in conexiones:
+            nuevo_g = g_score + conexion.tiempo
+            h = self.heuristica(conexion.destino, destino)
+            nuevo_f = nuevo_g + h
+            
+            heapq.heappush(cola, (nuevo_f, nuevo_g, ...))
+\end{lstlisting}
+
+\subsection{Función Heurística}
+
+La función heurística utiliza la distancia euclidiana entre las coordenadas de las estaciones:
+
+\begin{equation}
+h(n) = \sqrt{(x_n - x_{destino})^2 + (y_n - y_{destino})^2} \times 2
+\end{equation}
+
+El factor de multiplicación por 2 convierte la distancia en una estimación de tiempo en minutos.
+
+\section{Resultados y Pruebas}
+
+\subsection{Casos de Prueba}
+
+Se implementaron y ejecutaron los siguientes casos de prueba:
+
+\begin{enumerate}
+    \item \textbf{Búsqueda básica}: Portal Norte → Centro
+    \item \textbf{Búsqueda con transbordos}: Portal Sur → Portal Suba
+    \item \textbf{Comparación de algoritmos}: Comparación entre A* y BFS
+    \item \textbf{Aplicación de reglas}: Verificación de reglas lógicas
+    \item \textbf{Función heurística}: Validación de estimaciones
+    \item \textbf{Manejo de errores}: Rutas inexistentes
+\end{enumerate}
+
+\subsection{Resultados Obtenidos}
+
+\subsubsection{Ejemplo 1: Ruta Directa}
+\textbf{Origen}: Portal Norte\\
+\textbf{Destino}: Centro\\
+\textbf{Ruta encontrada}: Portal Norte → Calle 100 → Calle 72 → Calle 45 → Centro\\
+\textbf{Tiempo}: 20 minutos\\
+\textbf{Costo}: 10,000 COP\\
+\textbf{Transbordos}: 0
+
+\subsubsection{Ejemplo 2: Ruta con Transbordos}
+\textbf{Origen}: Portal Sur\\
+\textbf{Destino}: Portal Suba\\
+\textbf{Ruta encontrada}: Portal Sur → Kennedy → Centro → Calle 72 → Portal Suba\\
+\textbf{Tiempo}: 28 minutos\\
+\textbf{Costo}: 10,000 COP\\
+\textbf{Transbordos}: 2 (Centro, Calle 72)
+
+\subsection{Análisis de Rendimiento}
+
+El algoritmo A* demostró ser eficiente para encontrar rutas óptimas, explorando significativamente menos nodos que BFS en la mayoría de los casos, gracias a la guía proporcionada por la función heurística.
+
+\section{Conclusiones}
+
+El sistema desarrollado demuestra la efectividad de combinar representación del conocimiento mediante reglas lógicas con algoritmos de búsqueda heurística para resolver problemas de planificación de rutas en sistemas de transporte masivo.
+
+Los principales logros del proyecto incluyen:
+
+\begin{itemize}
+    \item Implementación exitosa de una base de conocimiento con reglas lógicas
+    \item Desarrollo de algoritmos de búsqueda heurística (A* y BFS)
+    \item Sistema funcional que encuentra rutas óptimas considerando múltiples criterios
+    \item Validación mediante suite completa de pruebas
+\end{itemize}
+
+\subsection{Trabajo Futuro}
+
+Posibles mejoras y extensiones:
+
+\begin{itemize}
+    \item Incorporar información en tiempo real sobre el estado del transporte
+    \item Implementar aprendizaje automático para ajustar heurísticas
+    \item Agregar más criterios de evaluación (accesibilidad, frecuencia)
+    \item Desarrollar interfaz gráfica de usuario
+    \item Expandir la base de conocimiento con más estaciones y líneas
+\end{itemize}
+
+\section{Referencias}
+
+\begin{itemize}
+    \item Benítez, R. (2014). \textit{Inteligencia artificial avanzada}. Barcelona: Editorial UOC.
+    \begin{itemize}
+        \item Capítulo 2: Lógica y representación del conocimiento
+        \item Capítulo 3: Sistemas basados en reglas
+        \item Capítulo 9: Técnicas basadas en búsquedas heurísticas
+    \end{itemize}
+    \item Russell, S., \& Norvig, P. (2020). \textit{Artificial Intelligence: A Modern Approach} (4th ed.). Pearson.
+    \item Cormen, T. H., Leiserson, C. E., Rivest, R. L., \& Stein, C. (2009). \textit{Introduction to Algorithms} (3rd ed.). MIT Press.
+\end{itemize}
+
+\section{Apéndice: Instrucciones de Ejecución}
+
+\subsection{Requisitos del Sistema}
+\begin{itemize}
+    \item Python 3.7 o superior
+    \item No se requieren librerías externas
+\end{itemize}
+
+\subsection{Ejecución del Sistema}
+
+Para ejecutar el sistema principal:
+\begin{lstlisting}[language=bash]
+python sistema_transporte.py
+\end{lstlisting}
+
+Para ejecutar las pruebas:
+\begin{lstlisting}[language=bash]
+python pruebas.py
+\end{lstlisting}
+
+\subsection{Repositorio Git}
+
+El código fuente está disponible en:\\
+\url{https://github.com/[usuario]/[repositorio]}
+
+\subsection{Video Explicativo}
+
+El video explicativo del proyecto está disponible en:\\
+\url{https://[plataforma]/[enlace-al-video]}
+
+\end{document}
+
