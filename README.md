@@ -20,8 +20,8 @@ Este proyecto implementa un sistema inteligente basado en conocimiento que utili
 
 1. Clonar el repositorio:
 ```bash
-git clone <url-del-repositorio>
-cd <nombre-del-repositorio>
+git clone https://github.com/MelissaGilV/ACT_2__IA_IBERO.git
+cd ACT_2__IA_IBERO
 ```
 
 2. Verificar la instalación de Python:
@@ -63,7 +63,7 @@ buscador = BuscadorRutas(bc)
 ruta = buscador.buscar_mejor_ruta("Portal Norte", "Centro", 'a_estrella')
 
 if ruta:
-    print(f"Ruta: {' → '.join(ruta.estaciones)}")
+    print(f"Ruta: {' -> '.join(ruta.estaciones)}")
     print(f"Tiempo: {ruta.tiempo_total} minutos")
     print(f"Costo: ${ruta.costo_total:,.0f} COP")
 ```
@@ -72,11 +72,14 @@ if ruta:
 
 ```
 .
-├── sistema_transporte.py    # Código principal del sistema
-├── pruebas.py               # Suite de pruebas
-├── README.md                # Este archivo
-├── documento.tex            # Documentación en LaTeX
-└── requirements.txt         # Dependencias (vacío, usa solo stdlib)
+├── sistema_transporte.py      # Código principal del sistema
+├── pruebas.py                 # Suite de pruebas
+├── README.md                  # Este archivo
+├── documento.tex              # Documentación en LaTeX
+├── requirements.txt           # Dependencias (vacío, usa solo stdlib)
+├── INSTRUCCIONES_GIT.md      # Guía para trabajar con Git
+├── RESUMEN_PROYECTO.md        # Resumen ejecutivo del proyecto
+└── .gitignore                 # Archivos ignorados por Git
 ```
 
 ## Algoritmos Implementados
@@ -130,6 +133,10 @@ El archivo `pruebas.py` incluye las siguientes pruebas:
 ## Autores
 
 [Agregar nombres de los integrantes del equipo]
+
+## Repositorio
+
+El código fuente está disponible en: https://github.com/MelissaGilV/ACT_2__IA_IBERO
 
 ## Licencia
 
